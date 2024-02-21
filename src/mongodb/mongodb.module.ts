@@ -8,7 +8,10 @@ import { MongooseModule } from '@nestjs/mongoose';
       envFilePath: '.env',
       isGlobal: true,
     }),
-    MongooseModule.forRoot(process.env.DB_URL),
+    // MongooseModule.forRoot(process.env.DB_URL),
+    MongooseModule.forRoot(
+      'mongodb+srv://mrkornthiwa:Kornthiwa@cluster0.bbkm0eg.mongodb.net/?retryWrites=true&w=majority',
+    ),
   ],
 })
 export class MongodbModule {}
