@@ -20,19 +20,19 @@ export class LoginController {
   @Post('login')
   async login(@Body() loginDto: LoginDto) {
     try {
-      const login = await this.loginService.login(
+      const user = await this.loginService.login(
         loginDto.username,
         loginDto.password,
       );
-      if (!login) {
+      if (!user) {
         throw new HttpException(
           { message: 'Invalid username or password' },
           HttpStatus.UNAUTHORIZED,
         );
       }
 
-      const token = await this.authService.generateToken(login); // Generate token for logged-in user
-      return { login, token }; // Return both login object and token
+      const token = await this.authService.generateToken(user); // Generate token for logged-in user
+      return { user, token }; // Return both login object and token
     } catch (error) {
       console.error(error);
       throw new HttpException(

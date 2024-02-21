@@ -1,5 +1,5 @@
 import { IsNotEmpty, IsString, Length, IsEnum } from 'class-validator';
-import { UserRole } from '../entities/login.entity';
+import { Department, UserRole } from '../entities/login.entity';
 
 export class CreateLoginDto {
   @IsString()
@@ -21,6 +21,9 @@ export class CreateLoginDto {
 
   @IsEnum(UserRole)
   readonly role: UserRole;
+
+  @IsEnum(Department)
+  readonly department: Department;
 }
 
 export class LoginDto {

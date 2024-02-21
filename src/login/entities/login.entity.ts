@@ -7,6 +7,16 @@ export enum UserRole {
   DOCTOR = 'doctor',
 }
 
+export enum Department {
+  CARDIOLOGY = 'CARDIOLOGY', // อายุรกรรมโรคหัวใจ
+  ONCOLOGY = 'ONCOLOGY', // อายุรกรรมโรคมะเร็ง
+  HR = 'HR', // ทรัพยากรบุคคล
+  IT = 'IT', // เทคโนโลยีสารสนเทศ
+  ADMINISTRATION = 'ADMINISTRATION', // แผนกธุรการ
+  EXAMINATION_ROOM = 'EXAMINATION_ROOM', // ห้องตรวจ
+  REFERRAL = 'REFERRAL', // แผนกส่งตัว
+}
+
 export type LoginDocument = Document & Login;
 
 @Schema({ timestamps: true })
@@ -28,6 +38,9 @@ export class Login {
 
   @Prop({ type: String, required: true, enum: UserRole })
   role: UserRole;
+
+  @Prop({ type: String, required: true, enum: Department })
+  department: Department;
 }
 
 export const LoginSchema = SchemaFactory.createForClass(Login);
