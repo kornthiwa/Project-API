@@ -1,34 +1,87 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  HttpException,
+  HttpStatus,
+} from '@nestjs/common';
 import { LoginService } from './login.service';
-import { CreateLoginDto } from './dto/create-login.dto';
-import { UpdateLoginDto } from './dto/update-login.dto';
+import { CreateLoginDto, LoginDto } from './dto/create-login.dto';
+import { AuthService } from './auth.service';
 
 @Controller('login')
 export class LoginController {
-  constructor(private readonly loginService: LoginService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly loginService: LoginService,
+  ) {}
 
-  @Post()
-  create(@Body() createLoginDto: CreateLoginDto) {
-    return this.loginService.create(createLoginDto);
+  @Post('login')
+  async login(@Body() loginDto: LoginDto) {
+    try {
+      const login = await this.loginService.login(
+        loginDto.username,
+        loginDto.password,
+      );
+      if (!login) {
+        throw new HttpException(
+          { message: 'Invalid username or password' },
+          HttpStatus.UNAUTHORIZED,
+        );
+      }
+
+      const token = await this.authService.generateToken(login); // Generate token for logged-in user
+      return { login, token }; // Return both login object and token
+    } catch (error) {
+      console.error(error);
+      throw new HttpException(
+        { message: 'Failed to login' },
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
+  @Post('register') // Dedicated endpoint for registration
+  async register(@Body() createLoginDto: CreateLoginDto) {
+    try {
+      const existingLogin = await this.loginService.findByUsername(
+        createLoginDto.username,
+      );
+      if (existingLogin) {
+        throw new HttpException(
+          { message: 'Username already exists' },
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+
+      // Create new login using loginService.create
+      const login = await this.loginService.create(createLoginDto);
+
+      // Generate token for the newly created user
+      const token = await this.authService.generateToken(login);
+
+      // Return both login object and token
+      return { login, token };
+    } catch (error) {
+      console.error(error);
+      throw new HttpException(
+        { message: 'Failed to create account' },
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 
   @Get()
-  findAll() {
-    return this.loginService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.loginService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateLoginDto: UpdateLoginDto) {
-    return this.loginService.update(+id, updateLoginDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.loginService.remove(+id);
+  async findAll() {
+    try {
+      return await this.loginService.findAll();
+    } catch (error) {
+      console.error(error);
+      throw new HttpException(
+        { message: 'Failed to retrieve all logins' },
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 }
