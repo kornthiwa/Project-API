@@ -25,10 +25,10 @@ export class DoctorService {
     return await this.doctorModel.findById(id);
   }
 
-  async findOneByName(name: string) {
+  async findOneByName(findname: string) {
     // Find a doctor by name (use regex for flexibility)
     return await this.doctorModel.findOne({
-      name: { $regex: new RegExp(name, 'i') },
+      name: { $regex: new RegExp(findname, 'i') },
     });
   }
 
