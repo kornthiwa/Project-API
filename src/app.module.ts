@@ -6,6 +6,7 @@ import { LoginModule } from './login/login.module';
 import { MongodbModule } from './mongodb/mongodb.module';
 import { PatientModule } from './patient/patient.module';
 import { DoctorModule } from './doctor/doctor.module';
+import { QueueModule } from './queue/queue.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { DoctorModule } from './doctor/doctor.module';
     LoginModule,
     PatientModule,
     DoctorModule,
+    QueueModule,
   ],
   controllers: [AppController],
   providers: [AppService],
