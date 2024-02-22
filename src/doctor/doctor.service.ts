@@ -3,7 +3,7 @@ import { Model } from 'mongoose';
 import { CreateDoctorDto } from './dto/create-doctor.dto';
 import { UpdateDoctorDto } from './dto/update-doctor.dto';
 import { InjectModel } from '@nestjs/mongoose';
-import { Doctor } from './entities/doctor.entity';
+import { Doctor, DoctorDocument } from './entities/doctor.entity';
 
 @Injectable()
 export class DoctorService {
@@ -25,10 +25,10 @@ export class DoctorService {
     return await this.doctorModel.findById(id);
   }
 
-  async findOneByName(name: string) {
-    // Find a doctor by name (use regex for flexibility)
-    return await this.doctorModel.findOne({
-      name: { $eq: new RegExp(name, 'i') },
+  async findOneByName(name: string): Promise<DoctorDocument[]> {
+    // Find doctors by name (use regex for flexibility)
+    return await this.doctorModel.find({
+      name: { $regex: new RegExp(`${name}.*`, 'i') },
     });
   }
 

@@ -11,6 +11,7 @@ import {
 import { DoctorService } from './doctor.service';
 import { CreateDoctorDto } from './dto/create-doctor.dto';
 import { UpdateDoctorDto } from './dto/update-doctor.dto';
+import { DoctorDocument } from './entities/doctor.entity';
 
 @Controller('doctor')
 export class DoctorController {
@@ -22,18 +23,24 @@ export class DoctorController {
   }
 
   @Get()
-  async findAll() {
+  async findAll(): Promise<DoctorDocument[]> {
     return this.doctorService.findAll();
+  }
+
+  @Get('/search')
+  async searchDoctorsByName(
+    @Query('name') name?: string,
+  ): Promise<DoctorDocument[]> {
+    if (name) {
+      return this.doctorService.findOneByName(name);
+    } else {
+      return this.doctorService.findAll();
+    }
   }
 
   @Get(':id')
   async findOne(@Param('id') id: string) {
     return this.doctorService.findOne(id);
-  }
-
-  @Get('/search')
-  async findByName(@Query('name') name: string) {
-    return this.doctorService.findOneByName(name);
   }
 
   @Patch(':id')
