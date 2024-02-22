@@ -20,19 +20,19 @@ export class LoginController {
   @Post('login')
   async login(@Body() loginDto: LoginDto) {
     try {
-      const user = await this.loginService.login(
+      const login = await this.loginService.login(
         loginDto.username,
         loginDto.password,
       );
-      if (!user) {
+      if (!login) {
         throw new HttpException(
           { message: 'Invalid username or password' },
           HttpStatus.UNAUTHORIZED,
         );
       }
 
-      const token = await this.authService.generateToken(user); // Generate token for logged-in user
-      return { user, token }; // Return both login object and token
+      const token = await this.authService.generateToken(login);
+      return { login, token };
     } catch (error) {
       console.error(error);
       throw new HttpException(
@@ -42,7 +42,7 @@ export class LoginController {
     }
   }
 
-  @Post('register') // Dedicated endpoint for registration
+  @Post('register')
   async register(@Body() createLoginDto: CreateLoginDto) {
     try {
       const existingLogin = await this.loginService.findByUsername(
@@ -55,13 +55,10 @@ export class LoginController {
         );
       }
 
-      // Create new login using loginService.create
       const login = await this.loginService.create(createLoginDto);
 
-      // Generate token for the newly created user
       const token = await this.authService.generateToken(login);
 
-      // Return both login object and token
       return { login, token };
     } catch (error) {
       console.error(error);

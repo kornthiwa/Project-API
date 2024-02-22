@@ -1,4 +1,11 @@
-import { IsNotEmpty, IsString, Length, IsEnum } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsString,
+  Length,
+  IsEnum,
+  IsOptional,
+  IsBoolean,
+} from 'class-validator';
 import { Department, UserRole } from '../entities/login.entity';
 
 export class CreateLoginDto {
@@ -24,6 +31,10 @@ export class CreateLoginDto {
 
   @IsEnum(Department)
   readonly department: Department;
+
+  @IsOptional()
+  @IsBoolean()
+  readonly rememberMe?: boolean;
 }
 
 export class LoginDto {
