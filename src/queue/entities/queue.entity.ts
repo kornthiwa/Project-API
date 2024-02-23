@@ -12,7 +12,7 @@ export class Queue {
     ref: 'Patient',
     required: true,
   })
-  patientId: Patient;
+  patientID: Patient;
 
   @Prop({ type: [{ type: Patient }] })
   patient?: Patient;

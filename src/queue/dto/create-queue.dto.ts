@@ -11,7 +11,7 @@ export class CreateQueueDto {
   // ข้อมูลผู้ป่วย
   @IsString()
   @IsNotEmpty()
-  readonly patientId: string;
+  readonly patientID: string;
 
   @IsObject()
   readonly patient: Patient;

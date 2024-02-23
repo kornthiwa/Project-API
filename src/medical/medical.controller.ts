@@ -1,34 +1,65 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Delete,
+  Query,
+  HttpException,
+  HttpStatus,
+} from '@nestjs/common';
 import { MedicalService } from './medical.service';
 import { CreateMedicalDto } from './dto/create-medical.dto';
-import { UpdateMedicalDto } from './dto/update-medical.dto';
+import { PatientService } from 'src/patient/patient.service';
+import { DoctorService } from 'src/doctor/doctor.service';
 
 @Controller('medical')
 export class MedicalController {
-  constructor(private readonly medicalService: MedicalService) {}
+  constructor(
+    private readonly medicalService: MedicalService,
+    private readonly patientService: PatientService,
+    private readonly doctorService: DoctorService,
+  ) {}
 
   @Post()
-  create(@Body() createMedicalDto: CreateMedicalDto) {
-    return this.medicalService.create(createMedicalDto);
+  async create(@Body() createMedicalDto: CreateMedicalDto) {
+    console.log(createMedicalDto);
+    const patient = await this.patientService.findOne(
+      createMedicalDto.patientID,
+    );
+    const doctor = await this.doctorService.findOne(createMedicalDto.doctorID);
+
+    if (!patient) {
+      throw new HttpException('Patient not found', HttpStatus.NOT_FOUND);
+    }
+
+    if (!doctor) {
+      throw new HttpException('Doctor not found', HttpStatus.NOT_FOUND);
+    }
+
+    return await this.medicalService.create({
+      ...createMedicalDto,
+      patient,
+      doctor,
+    });
   }
 
   @Get()
-  findAll() {
-    return this.medicalService.findAll();
+  async findAll() {
+    return await this.medicalService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.medicalService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateMedicalDto: UpdateMedicalDto) {
-    return this.medicalService.update(+id, updateMedicalDto);
+  @Get('/search')
+  async findOne(
+    @Query('patient') patientID?: string,
+    @Query('doctor') doctorID?: string,
+  ) {
+    return await this.medicalService.findOne(patientID, doctorID);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.medicalService.remove(+id);
+  async remove(@Param('id') id: string) {
+    return await this.medicalService.remove(id);
   }
 }

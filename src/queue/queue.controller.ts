@@ -26,7 +26,7 @@ export class QueueController {
       const lastQueue = await this.queueService.findLastQueue();
       let queueNumber = 1;
       const patient = await this.patientService.findOne(
-        createQueueDto.patientId,
+        createQueueDto.patientID,
       );
       if (lastQueue && lastQueue.queuedAt.getDate() === new Date().getDate()) {
         queueNumber = lastQueue.queueNumber + 1;

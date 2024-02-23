@@ -1,26 +1,41 @@
 import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
 import { CreateMedicalDto } from './dto/create-medical.dto';
-import { UpdateMedicalDto } from './dto/update-medical.dto';
+import {
+  MedicalRecord,
+  MedicalRecordDocument,
+} from './entities/medical.entity';
 
 @Injectable()
 export class MedicalService {
-  create(createMedicalDto: CreateMedicalDto) {
-    return 'This action adds a new medical';
+  constructor(
+    @InjectModel(MedicalRecord.name)
+    private readonly medicalRecordModel: Model<MedicalRecordDocument>,
+  ) {}
+
+  async create(
+    createMedicalDto: CreateMedicalDto,
+  ): Promise<MedicalRecordDocument> {
+    const newMedicalRecord = new this.medicalRecordModel(createMedicalDto);
+    return await newMedicalRecord.save();
   }
 
-  findAll() {
-    return `This action returns all medical`;
+  async findAll(): Promise<MedicalRecordDocument[]> {
+    return await this.medicalRecordModel.find().exec();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} medical`;
+  async findOne(
+    patientID: string,
+    doctorID: string,
+  ): Promise<MedicalRecordDocument | null> {
+    if (doctorID) {
+      return await this.medicalRecordModel.findOne({ doctorID }).exec();
+    }
+    return await this.medicalRecordModel.findOne({ patientID }).exec();
   }
 
-  update(id: number, updateMedicalDto: UpdateMedicalDto) {
-    return `This action updates a #${id} medical`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} medical`;
+  async remove(id: string): Promise<void> {
+    await this.medicalRecordModel.findByIdAndDelete(id);
   }
 }

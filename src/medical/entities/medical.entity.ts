@@ -13,7 +13,10 @@ export class MedicalRecord {
     ref: 'Patient',
     required: true,
   })
-  patient: Patient;
+  patientID: Patient;
+
+  @Prop({ type: [{ type: Patient }] })
+  patient?: Patient;
 
   // หมอที่รับผิดชอบการรักษา
   @Prop({
@@ -21,7 +24,10 @@ export class MedicalRecord {
     ref: 'Doctor',
     required: true,
   })
-  doctor: Doctor;
+  doctorID: Doctor;
+
+  @Prop({ type: [{ type: Doctor }] })
+  doctor?: Doctor;
 
   // รายละเอียดของการรักษา
   @Prop({ type: String, required: true })
