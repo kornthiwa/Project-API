@@ -8,14 +8,10 @@ import {
 } from '@nestjs/common';
 import { LoginService } from './login.service';
 import { CreateLoginDto, LoginDto } from './dto/create-login.dto';
-import { AuthService } from './auth.service';
 
 @Controller('login')
 export class LoginController {
-  constructor(
-    private readonly authService: AuthService,
-    private readonly loginService: LoginService,
-  ) {}
+  constructor(private readonly loginService: LoginService) {}
 
   @Post('login')
   async login(@Body() loginDto: LoginDto) {
@@ -31,8 +27,7 @@ export class LoginController {
         );
       }
 
-      const token = await this.authService.generateToken(login);
-      return { login, token };
+      return { login };
     } catch (error) {
       console.error(error);
       throw new HttpException(
@@ -57,9 +52,7 @@ export class LoginController {
 
       const login = await this.loginService.create(createLoginDto);
 
-      const token = await this.authService.generateToken(login);
-
-      return { login, token };
+      return { login };
     } catch (error) {
       console.error(error);
       throw new HttpException(

@@ -1,8 +1,16 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  HttpException,
+  HttpStatus,
+  UseGuards,
+} from '@nestjs/common';
 import { QueueService } from './queue.service';
 import { CreateQueueDto } from './dto/create-queue.dto';
 import { Queue } from './entities/queue.entity';
 import { PatientService } from 'src/patient/patient.service';
+import { AuthGuard } from 'src/auth/auth.guard';
 
 @Controller('queue')
 export class QueueController {
@@ -11,6 +19,7 @@ export class QueueController {
     private readonly patientService: PatientService,
   ) {}
 
+  @UseGuards(AuthGuard)
   @Post()
   async enqueue(@Body() createQueueDto: CreateQueueDto): Promise<Queue> {
     try {
@@ -22,8 +31,6 @@ export class QueueController {
       if (lastQueue && lastQueue.queuedAt.getDate() === new Date().getDate()) {
         queueNumber = lastQueue.queueNumber + 1;
       }
-      console.log(patient);
-
       const queue = await this.queueService.create({
         ...createQueueDto,
         queueNumber,
@@ -34,8 +41,11 @@ export class QueueController {
 
       return queue;
     } catch (error) {
-      console.error('Error enqueuing patient:', error);
-      throw new Error('Failed to enqueue patient');
+      console.error('Error enqueuing queue:', error);
+      throw new HttpException(
+        { message: 'Failed to retrieve queue' },
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 }

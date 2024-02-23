@@ -6,6 +6,8 @@ import {
   Patch,
   Param,
   Delete,
+  HttpException,
+  HttpStatus,
 } from '@nestjs/common';
 import { PatientService } from './patient.service';
 import { CreatePatientDto } from './dto/create-patient.dto';
@@ -17,17 +19,41 @@ export class PatientController {
 
   @Post()
   async create(@Body() createPatientDto: CreatePatientDto) {
-    return await this.patientService.create(createPatientDto);
+    try {
+      return await this.patientService.create(createPatientDto);
+    } catch (error) {
+      console.error(error);
+      throw new HttpException(
+        { message: 'Failed to create patient' },
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 
   @Get()
   async findAll() {
-    return await this.patientService.findAll();
+    try {
+      return await this.patientService.findAll();
+    } catch (error) {
+      console.error(error);
+      throw new HttpException(
+        { message: 'Failed to retrieve all patients' },
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 
   @Get(':id')
   async findOne(@Param('id') id: string) {
-    return await this.patientService.findOne(id);
+    try {
+      return await this.patientService.findOne(id);
+    } catch (error) {
+      console.error(error);
+      throw new HttpException(
+        { message: 'Failed to retrieve patient' },
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 
   @Patch(':id')
@@ -35,11 +61,27 @@ export class PatientController {
     @Param('id') id: string,
     @Body() updatePatientDto: UpdatePatientDto,
   ) {
-    return await this.patientService.update(id, updatePatientDto);
+    try {
+      return await this.patientService.update(id, updatePatientDto);
+    } catch (error) {
+      console.error(error);
+      throw new HttpException(
+        { message: 'Failed to update patient' },
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 
   @Delete(':id')
   async remove(@Param('id') id: string) {
-    return await this.patientService.remove(id);
+    try {
+      return await this.patientService.remove(id);
+    } catch (error) {
+      console.error(error);
+      throw new HttpException(
+        { message: 'Failed to remove patient' },
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 }

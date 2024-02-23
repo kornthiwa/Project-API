@@ -7,6 +7,8 @@ import {
   Param,
   Delete,
   Query,
+  HttpException,
+  HttpStatus,
 } from '@nestjs/common';
 import { DoctorService } from './doctor.service';
 import { CreateDoctorDto } from './dto/create-doctor.dto';
@@ -19,28 +21,60 @@ export class DoctorController {
 
   @Post()
   async create(@Body() createDoctorDto: CreateDoctorDto) {
-    return this.doctorService.create(createDoctorDto);
+    try {
+      return await this.doctorService.create(createDoctorDto);
+    } catch (error) {
+      console.error(error);
+      throw new HttpException(
+        { message: 'Failed to create doctor' },
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 
   @Get()
   async findAll(): Promise<DoctorDocument[]> {
-    return this.doctorService.findAll();
+    try {
+      return await this.doctorService.findAll();
+    } catch (error) {
+      console.error(error);
+      throw new HttpException(
+        { message: 'Failed to retrieve all doctors' },
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 
   @Get('/search')
   async searchDoctorsByName(
     @Query('name') name?: string,
   ): Promise<DoctorDocument[]> {
-    if (name) {
-      return this.doctorService.findOneByName(name);
-    } else {
-      return this.doctorService.findAll();
+    try {
+      if (name) {
+        return await this.doctorService.findOneByName(name);
+      } else {
+        return await this.doctorService.findAll();
+      }
+    } catch (error) {
+      console.error(error);
+      throw new HttpException(
+        { message: 'Failed to search doctors by name' },
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 
   @Get(':id')
   async findOne(@Param('id') id: string) {
-    return this.doctorService.findOne(id);
+    try {
+      return await this.doctorService.findOne(id);
+    } catch (error) {
+      console.error(error);
+      throw new HttpException(
+        { message: 'Failed to retrieve doctor' },
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 
   @Patch(':id')
@@ -48,11 +82,27 @@ export class DoctorController {
     @Param('id') id: string,
     @Body() updateDoctorDto: UpdateDoctorDto,
   ) {
-    return this.doctorService.update(id, updateDoctorDto);
+    try {
+      return await this.doctorService.update(id, updateDoctorDto);
+    } catch (error) {
+      console.error(error);
+      throw new HttpException(
+        { message: 'Failed to update doctor' },
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 
   @Delete(':id')
   async remove(@Param('id') id: string) {
-    return this.doctorService.remove(id);
+    try {
+      return await this.doctorService.remove(id);
+    } catch (error) {
+      console.error(error);
+      throw new HttpException(
+        { message: 'Failed to remove doctor' },
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 }
