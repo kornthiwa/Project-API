@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { Document } from 'mongoose';
-import { Doctor } from 'src/doctor/entities/doctor.entity';
-import { Patient } from 'src/patient/entities/patient.entity';
+import { Doctor, DoctorSchema } from 'src/doctor/entities/doctor.entity';
+import { Patient, PatientSchema } from 'src/patient/entities/patient.entity';
 
 export type MedicalRecordDocument = Document & MedicalRecord;
 
@@ -15,8 +15,8 @@ export class MedicalRecord {
   })
   patientID: Patient;
 
-  @Prop({ type: [{ type: Patient }] })
-  patient?: Patient;
+  // @Prop({ type: PatientSchema, required: true })
+  // patient: Patient;
 
   // หมอที่รับผิดชอบการรักษา
   @Prop({
@@ -26,20 +26,36 @@ export class MedicalRecord {
   })
   doctorID: Doctor;
 
-  @Prop({ type: [{ type: Doctor }] })
-  doctor?: Doctor;
+  // @Prop({ type: DoctorSchema, required: true })
+  // doctor: Doctor;
 
   // รายละเอียดของการรักษา
   @Prop({ type: String, required: true })
   treatmentDetails: string;
 
-  // วันที่รับการรักษา
-  @Prop({ type: Date, required: true })
-  treatmentDate: Date;
-
   // ผลการตรวจวินิจฉัย
   @Prop({ type: String, required: true })
   diagnosis: string;
+
+  // อุณหภูมิร่างกาย
+  @Prop({ type: Number })
+  bodyTemperature?: number;
+
+  // สถานะการรักษา
+  @Prop({ type: String, required: false })
+  status: string;
+
+  // น้ำหนัก
+  @Prop({ type: Number })
+  weight?: number;
+
+  // ส่วนสูง
+  @Prop({ type: Number })
+  height?: number;
+
+  // ความดันโลหิต
+  @Prop({ type: String })
+  bloodPressure?: string;
 }
 
 export const MedicalRecordSchema = SchemaFactory.createForClass(MedicalRecord);

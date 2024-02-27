@@ -1,4 +1,10 @@
-import { IsNotEmpty, IsObject, IsOptional, IsString } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsNumber,
+  IsObject,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 import { Doctor } from 'src/doctor/entities/doctor.entity';
 import { Patient } from 'src/patient/entities/patient.entity';
 
@@ -13,23 +19,44 @@ export class CreateMedicalDto {
   @IsString()
   doctorID: string;
 
-  @IsObject()
-  readonly patient: Patient;
+  // @IsObject()
+  // readonly patient: Patient;
 
-  @IsObject()
-  readonly doctor: Doctor;
+  // @IsObject()
+  // readonly doctor: Doctor;
 
   // รายละเอียดของการรักษา
   @IsNotEmpty()
   @IsString()
   treatmentDetails: string;
 
-  // วันที่รับการรักษา
-  @IsOptional()
-  treatmentDate?: Date;
-
   // ผลการตรวจวินิจฉัย
   @IsNotEmpty()
   @IsString()
   diagnosis: string;
+
+  // อุณหภูมิร่างกาย
+  @IsOptional()
+  @IsNumber()
+  bodyTemperature?: number;
+
+  // สถานะการรักษา
+  @IsOptional()
+  @IsString()
+  status?: string;
+
+  // น้ำหนัก
+  @IsOptional()
+  @IsNumber()
+  weight?: number;
+
+  // ส่วนสูง
+  @IsOptional()
+  @IsNumber()
+  height?: number;
+
+  // ความดันโลหิต
+  @IsOptional()
+  @IsString()
+  bloodPressure?: string;
 }

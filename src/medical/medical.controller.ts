@@ -28,20 +28,22 @@ export class MedicalController {
     const patient = await this.patientService.findOne(
       createMedicalDto.patientID,
     );
+    console.log(patient);
+
     const doctor = await this.doctorService.findOne(createMedicalDto.doctorID);
+    console.log(doctor);
 
-    if (!patient) {
-      throw new HttpException('Patient not found', HttpStatus.NOT_FOUND);
-    }
-
-    if (!doctor) {
-      throw new HttpException('Doctor not found', HttpStatus.NOT_FOUND);
+    if (!patient || !doctor) {
+      const errors = [];
+      if (!patient) errors.push('Patient not found');
+      if (!doctor) errors.push('Doctor not found');
+      throw new HttpException(errors.join(', '), HttpStatus.NOT_FOUND);
     }
 
     return await this.medicalService.create({
       ...createMedicalDto,
-      patient,
-      doctor,
+      // patient,
+      // doctor,
     });
   }
 
