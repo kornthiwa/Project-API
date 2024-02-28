@@ -1,29 +1,21 @@
 import {
   IsNotEmpty,
   IsNumber,
-  IsObject,
   IsOptional,
   IsString,
+  ValidateNested,
 } from 'class-validator';
-import { Doctor } from 'src/doctor/entities/doctor.entity';
-import { Patient } from 'src/patient/entities/patient.entity';
 
 export class CreateMedicalDto {
-  // ผู้ป่วยที่เกี่ยวข้องกับประวัติการรักษา
-  @IsNotEmpty()
-  @IsString()
-  patientID: string;
+  // ข้อมูลผู้ป่วย
+  @IsOptional()
+  @ValidateNested()
+  readonly patient: string;
 
-  // หมอที่รับผิดชอบการรักษา
-  @IsNotEmpty()
-  @IsString()
-  doctorID: string;
-
-  // @IsObject()
-  // readonly patient: Patient;
-
-  // @IsObject()
-  // readonly doctor: Doctor;
+  // ข้อมูลหมอ
+  @IsOptional()
+  @ValidateNested()
+  readonly doctor: string;
 
   // รายละเอียดของการรักษา
   @IsNotEmpty()

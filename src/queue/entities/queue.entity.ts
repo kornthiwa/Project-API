@@ -10,19 +10,15 @@ export class Queue {
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Patient',
-    required: true,
   })
-  patientID: Patient;
-
-  @Prop({ type: [{ type: Patient }] })
-  patient?: Patient;
+  patient: Patient;
 
   // สถานะคิว
-  @Prop({ type: String, required: true })
+  @Prop({ type: String, required: false })
   status: string;
 
   // เวลาที่เข้าคิว
-  @Prop({ type: Date, required: true })
+  @Prop({ type: Date, required: false })
   queuedAt: Date;
 
   // เวลาที่คาดว่าจะได้เข้ารับการรักษา
@@ -38,7 +34,7 @@ export class Queue {
   finishedTreatmentAt: Date;
 
   // หมายเลขคิว
-  @Prop({ type: Number, required: true })
+  @Prop({ type: Number, required: false })
   queueNumber: number;
 }
 

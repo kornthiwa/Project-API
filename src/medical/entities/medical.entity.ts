@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { Document } from 'mongoose';
-import { Doctor, DoctorSchema } from 'src/doctor/entities/doctor.entity';
-import { Patient, PatientSchema } from 'src/patient/entities/patient.entity';
+import { Doctor } from 'src/doctor/entities/doctor.entity';
+import { Patient } from 'src/patient/entities/patient.entity';
 
 export type MedicalRecordDocument = Document & MedicalRecord;
 
@@ -13,10 +13,7 @@ export class MedicalRecord {
     ref: 'Patient',
     required: true,
   })
-  patientID: Patient;
-
-  // @Prop({ type: PatientSchema, required: true })
-  // patient: Patient;
+  patient: Patient;
 
   // หมอที่รับผิดชอบการรักษา
   @Prop({
@@ -24,10 +21,7 @@ export class MedicalRecord {
     ref: 'Doctor',
     required: true,
   })
-  doctorID: Doctor;
-
-  // @Prop({ type: DoctorSchema, required: true })
-  // doctor: Doctor;
+  doctor: Doctor;
 
   // รายละเอียดของการรักษา
   @Prop({ type: String, required: true })

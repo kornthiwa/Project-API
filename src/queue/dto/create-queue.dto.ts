@@ -1,20 +1,16 @@
 import {
   IsNotEmpty,
   IsNumber,
-  IsObject,
   IsOptional,
   IsString,
+  ValidateNested,
 } from 'class-validator';
-import { Patient } from 'src/patient/entities/patient.entity';
 
 export class CreateQueueDto {
   // ข้อมูลผู้ป่วย
-  @IsString()
-  @IsNotEmpty()
-  readonly patientID: string;
-
-  @IsObject()
-  readonly patient: Patient;
+  @IsOptional()
+  @ValidateNested()
+  readonly patient: string;
 
   // สถานะคิว
   @IsString()

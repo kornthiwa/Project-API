@@ -24,13 +24,10 @@ export class MedicalController {
 
   @Post()
   async create(@Body() createMedicalDto: CreateMedicalDto) {
-    console.log(createMedicalDto);
-    const patient = await this.patientService.findOne(
-      createMedicalDto.patientID,
-    );
+    const patient = await this.patientService.findOne(createMedicalDto.patient);
     console.log(patient);
 
-    const doctor = await this.doctorService.findOne(createMedicalDto.doctorID);
+    const doctor = await this.doctorService.findOne(createMedicalDto.doctor);
     console.log(doctor);
 
     if (!patient || !doctor) {
@@ -40,11 +37,7 @@ export class MedicalController {
       throw new HttpException(errors.join(', '), HttpStatus.NOT_FOUND);
     }
 
-    return await this.medicalService.create({
-      ...createMedicalDto,
-      // patient,
-      // doctor,
-    });
+    return await this.medicalService.create(createMedicalDto);
   }
 
   @Get()

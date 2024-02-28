@@ -22,7 +22,11 @@ export class MedicalService {
   }
 
   async findAll(): Promise<MedicalRecordDocument[]> {
-    return await this.medicalRecordModel.find().exec();
+    const medicalRecords = await this.medicalRecordModel
+      .find()
+      .populate('patient')
+      .populate('doctor');
+    return medicalRecords;
   }
 
   async findOne(
