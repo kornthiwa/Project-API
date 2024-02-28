@@ -16,9 +16,11 @@ export class AuthGuard implements CanActivate {
     const request = context.switchToHttp().getRequest();
     const token = this.extractTokenFromHeader(request);
 
-    // หากไม่มี token ใน header หรือ token ไม่ถูกต้อง จะสร้าง UnauthorizedException
+    // หากไม่มี token ใน header หรือ token ไม่ถูกต้อง จะสร้าง UnauthorizedException พร้อมข้อความแจ้งเตือน
     if (!token) {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException({
+        message: 'ไม่มี Token',
+      });
     }
 
     try {
@@ -27,9 +29,17 @@ export class AuthGuard implements CanActivate {
         secret: jwtConstants.secret,
       });
       request['user'] = payload; // กำหนด payload ให้กับ request object
-    } catch {
-      // หากไม่สามารถยืนยัน token ได้ จะสร้าง UnauthorizedException
-      throw new UnauthorizedException();
+    } catch (error) {
+      // หากไม่สามารถยืนยัน token ได้ จะสร้าง UnauthorizedException พร้อมข้อความแจ้งเตือน
+      if (error.name === 'TokenExpiredError') {
+        throw new UnauthorizedException({
+          message: 'Session หมดอายุ',
+        });
+      } else {
+        throw new UnauthorizedException({
+          message: 'Token ไม่ถูกต้อง',
+        });
+      }
     }
 
     return true;

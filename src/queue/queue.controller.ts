@@ -6,11 +6,13 @@ import {
   HttpStatus,
   Get,
   Param,
+  UseGuards,
 } from '@nestjs/common';
 import { QueueService } from './queue.service';
 import { CreateQueueDto } from './dto/create-queue.dto';
 import { Queue } from './entities/queue.entity';
 import { PatientService } from 'src/patient/patient.service';
+import { AuthGuard } from 'src/auth/auth.guard';
 
 @Controller('queue')
 export class QueueController {
@@ -34,11 +36,9 @@ export class QueueController {
   @Get()
   async allQueues(): Promise<Queue[]> {
     try {
-      // ดึงข้อมูลคิวทั้งหมดพร้อม populate ข้อมูลในฟิลด์ '_id'
       const queues = await this.queueService.findAll();
       return queues;
     } catch (error) {
-      // จัดการกับ error ที่อาจเกิดขึ้น
       console.error(error);
       throw new HttpException(
         'เกิดข้อผิดพลาดในการดึงข้อมูลคิว',
@@ -47,7 +47,7 @@ export class QueueController {
     }
   }
 
-  // @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard)
   @Post()
   async enqueue(@Body() createQueueDto: CreateQueueDto): Promise<Queue> {
     try {
