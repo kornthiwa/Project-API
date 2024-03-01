@@ -24,7 +24,7 @@ export class PatientController {
     } catch (error) {
       console.error(error);
       throw new HttpException(
-        { message: 'Failed to create patient' },
+        { message: 'มีข้อมูลในระบบแล้ว' },
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }

@@ -13,13 +13,17 @@ export class PatientService {
 
   async create(createPatientDto: CreatePatientDto): Promise<Patient> {
     // ตรวจสอบว่ามีผู้ป่วยที่มีชื่อเหมือนกันหรือไม่
+    console.log(createPatientDto.citizenid);
+
     const existingPatient = await this.patientModel.findOne({
-      name: createPatientDto.name,
+      citizenid: createPatientDto.citizenid,
     });
+
+    console.log('test', existingPatient);
 
     // ถ้ามีผู้ป่วยที่มีชื่อเหมือนกันแล้ว ให้โยนข้อผิดพลาด
     if (existingPatient) {
-      throw new Error('Patient with the same name already exists');
+      throw new Error('Patient with the same citizenid already exists');
     }
 
     // ถ้าไม่มีผู้ป่วยที่มีชื่อเหมือนกัน สร้างผู้ป่วยใหม่

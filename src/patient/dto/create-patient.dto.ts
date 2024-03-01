@@ -1,31 +1,67 @@
-import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class CreatePatientDto {
   @IsString()
-  @IsNotEmpty()
-  readonly name: string;
+  @IsOptional()
+  nametitle?: string;
+
+  @IsString()
+  @IsOptional()
+  name?: string;
+
+  @IsString()
+  @IsOptional()
+  lastName?: string;
 
   @IsNumber()
-  readonly age: number;
+  @IsOptional()
+  age?: number;
+
+  @IsOptional()
+  @IsString()
+  phoneNumber?: string;
+
+  @IsOptional()
+  @IsString()
+  emergencyContact?: string;
+
+  @IsOptional()
+  @IsString()
+  citizenid?: string;
+
+  @IsOptional()
+  @IsString()
+  race?: string;
+
+  @IsOptional()
+  @IsString()
+  nationality?: string;
 
   @IsString()
-  readonly symptoms: string;
+  @IsOptional()
+  gender?: string;
 
   @IsString()
-  readonly treatment?: string;
+  @IsOptional()
+  symptoms?: string;
 
+  @IsOptional()
   @IsString()
-  readonly medicalHistory?: string[];
+  treatment?: string;
 
-  @IsString()
-  readonly address?: string;
+  @IsOptional()
+  @IsString({ each: true })
+  medicalHistory?: string[];
 
+  @IsOptional()
   @IsString()
-  readonly phoneNumber?: string;
+  address?: string;
 
-  @IsString()
-  readonly emergencyContact?: string;
+  @IsOptional()
+  @IsString({ each: true })
+  allergicMedicine?: string[];
 
+  @IsOptional()
   @IsString()
-  readonly status?: string;
+  status?: string;
 }
