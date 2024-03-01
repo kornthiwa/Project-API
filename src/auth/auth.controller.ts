@@ -28,7 +28,6 @@ export class AuthController {
     const userWithoutPassword = { ...user.toObject() };
     delete userWithoutPassword.password;
 
-    console.log(access_token);
     return { access_token, user: userWithoutPassword };
   }
 }

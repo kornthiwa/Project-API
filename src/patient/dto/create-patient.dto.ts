@@ -6,20 +6,26 @@ export class CreatePatientDto {
   readonly name: string;
 
   @IsNumber()
-  @IsNotEmpty()
   readonly age: number;
 
   @IsString()
-  @IsNotEmpty()
   readonly symptoms: string;
 
+  @IsString()
   readonly treatment?: string;
 
+  @IsString()
   readonly medicalHistory?: string[];
 
+  @IsString()
   readonly address?: string;
 
+  @IsString()
   readonly phoneNumber?: string;
 
+  @IsString()
   readonly emergencyContact?: string;
+
+  @IsString()
+  readonly status?: string;
 }
